@@ -1,0 +1,95 @@
+#:kivy 2.0
+WindowManager:
+
+<Button>
+    font_size: 20
+    size_hint: (0.3, 0.3)
+
+<PageLayoutExample@PageLayout>:
+    FirstWindow:
+    SecondWindow:
+
+
+<FloatLayoutExample@FloatLayout>:
+
+    Image:
+        id: my_image
+        source: "dark.zip"
+        anim_delay: 0.04
+        allow_stretch: True
+        keep_ratio: False
+
+<WindowManager>:
+    FirstWindow:
+    SecondWindow:
+
+<FirstWindow>
+    name: "first"
+
+    FloatLayoutExample:
+
+    BoxLayout:
+        orientation:"vertical"
+        size: root.width, root.height
+
+        Label:
+            text: "Welcome to the Phlo"
+            font_size: 32
+            # color: 0, 0, 0, 1
+        BoxLayout:
+            orientation: "vertical"
+        
+            BoxLayout:
+                orientation: "horizontal"
+                Label:
+                    text: "Max Work Time:"
+                    # color: 0, 0, 0, 1
+
+                Slider:
+                    id: work_slider
+                    min: 0
+                    max: 100
+                    value: 50
+                Label:
+                    text: str(int(work_slider.value))
+                    # color: 0, 0, 0, 1
+            
+            BoxLayout:
+                orientation: "horizontal"
+                Label:
+                    text: "Max Break Time:"
+                    # color: 0, 0, 0, 1
+
+                Slider:
+                    id: break_slider
+                    min: 0
+                    max: 100
+                    value: 50
+                Label:
+                    text: str(int(break_slider.value))
+                    # color: 0, 0, 0, 1
+
+        Button:
+            text: "Next Screen"
+            font_size: 32
+            on_release: 
+                app.root.current = "second"
+                root.manager.transition.direction = "left"
+
+<SecondWindow>
+    name: "second"
+
+    BoxLayout:
+        orientation:"vertical"
+        size: root.width, root.height
+
+        Label:
+            text: "Second Screen"
+            font_size: 32
+
+        Button:
+            text: "Previous Screen"
+            font_size: 32
+            on_release: 
+                app.root.current = "first"
+                root.manager.transition.direction = "right"
