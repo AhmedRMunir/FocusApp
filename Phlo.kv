@@ -5,13 +5,7 @@ WindowManager:
     font_size: 20
     size_hint: (0.3, 0.3)
 
-<PageLayoutExample@PageLayout>:
-    FirstWindow:
-    SecondWindow:
-
-
-<FloatLayoutExample@FloatLayout>:
-
+<Background@FloatLayout>:
     Image:
         id: my_image
         source: "dark.zip"
@@ -20,20 +14,23 @@ WindowManager:
         keep_ratio: False
 
 <WindowManager>:
-    FirstWindow:
-    SecondWindow:
+    HomePage:
+    WorkPage:
+    WorkDetesPage:
+    BreakPage:
+    SummaryPage:
 
-<FirstWindow>
-    name: "first"
+<HomePage@FirstWindow>
+    name: "home"
 
-    FloatLayoutExample:
+    Background:
 
     BoxLayout:
         orientation:"vertical"
         size: root.width, root.height
 
         Label:
-            text: "Welcome to the Phlo"
+            text: "Home Page"
             font_size: 32
             # color: 0, 0, 0, 1
         BoxLayout:
@@ -70,26 +67,96 @@ WindowManager:
                     # color: 0, 0, 0, 1
 
         Button:
-            text: "Next Screen"
+            text: "Start Work"
             font_size: 32
             on_release: 
-                app.root.current = "second"
+                app.root.current = "work"
                 root.manager.transition.direction = "left"
+        Button:
+            text: "Settings"
+            font_size: 32
+            on_release: 
+                app.open_settings()
+                
 
-<SecondWindow>
-    name: "second"
+<WorkPage@SecondWindow>
+    name: "work"
+
+    Background:
 
     BoxLayout:
         orientation:"vertical"
         size: root.width, root.height
 
         Label:
-            text: "Second Screen"
+            text: "Work Page"
             font_size: 32
 
         Button:
-            text: "Previous Screen"
+            text: "Work Details"
             font_size: 32
             on_release: 
-                app.root.current = "first"
+                app.root.current = "workdetes"
+                root.manager.transition.direction = "up"
+
+        Button:
+            text: "Break Time"
+            font_size: 32
+            on_release: 
+                app.root.current = "break"
+                root.manager.transition.direction = "left"
+
+<WorkDetesPage@Screen>:
+    name: "workdetes"
+
+    Label:
+        text: "Work Detes Page"
+    
+    Button:
+        text: "Back to Work"
+        font_size: 32
+        on_release: 
+            app.root.current = "work"
+            root.manager.transition.direction = "down"
+    
+<BreakPage@Screen>:
+    name: "break"
+
+    Label:
+        text: "Break page"
+
+    BoxLayout:
+        orientation:"vertical"
+        size: root.width, root.height
+    
+        Button:
+            text: "Back to Work"
+            font_size: 32
+            on_release: 
+                app.root.current = "work"
                 root.manager.transition.direction = "right"
+        
+        Button:
+            text: "End Session"
+            font_size: 32
+            on_release: 
+                app.root.current = "summary"
+                root.manager.transition.direction = "left"
+
+<SummaryPage@Screen>:
+    name: "summary"
+
+    Label:
+        text: "Summary page"
+
+    BoxLayout:
+        orientation:"vertical"
+        size: root.width, root.height
+    
+        Button:
+            text: "Back to Home"
+            font_size: 32
+            on_release: 
+                app.root.current = "home"
+                root.manager.transition.dxirection = "left"
+
