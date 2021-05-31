@@ -8,7 +8,7 @@ WindowManager:
 <Background@FloatLayout>:
     Image:
         id: my_image
-        source: "background.jpg"
+        source: "dark.zip"
         anim_delay: 0.04
         allow_stretch: True
         keep_ratio: False
@@ -20,7 +20,7 @@ WindowManager:
     BreakPage:
     SummaryPage:
 
-<HomePage@FirstWindow>
+<HomePage>:
     name: "home"
 
     Background:
@@ -30,8 +30,10 @@ WindowManager:
         size: root.width, root.height
 
         Label:
-            text: "Home Page"
-            font_size: 32
+            text: "Welcome to Phlo"
+            font_size: 48
+            bold: True
+            font_name: "fonts/Zapfino.ttf"
             # color: 0, 0, 0, 1
         BoxLayout:
             orientation: "vertical"
@@ -66,25 +68,42 @@ WindowManager:
                     text: str(int(break_slider.value))
                     # color: 0, 0, 0, 1
 
-        Button:
-            text: "Start Work"
-            font_size: 32
-            on_release: 
-                app.root.current = "work"
-                root.manager.transition.direction = "left"
-        Button:
-            text: "Settings"
-            font_size: 32
-            on_release: 
-                app.open_settings()
-        ImageButton:
-            source: "button.jpg"
-            on_release: app.open_settings()
-                
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                #text: "Connection Button"
+                #font_size: 32
+                size_hint: None, None
+                pos_hint: { "right": 1 }
+                background_color: 0,0,0,0
+                #Image: 
+                    #source: "Buttons/ButtonOn.jpg" if self.parent.state=="normal" else "Buttons/ButtonOff.jpg"
+                    #size_hint: .3, .3 
+                    #center_x: self.parent.center_x
+                    #center_y: self.parent.center_y
+            Button:
+                text: "START WORK"
+                bold: True
+                font_size: 40
+                pos_hint: { "center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "work"
+                    root.manager.transition.direction = "left"
+            Button:
+                size_hint: None, None
+                pos_hint: { "right": 1 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.open_settings()
+                Image: 
+                    source: "Buttons/SettingsIcon.jpg" if self.parent.state=="normal" else "Buttons/SettingsIconPressed.jpg"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
 
-<WorkPage@SecondWindow>
+
+<WorkPage>:
     name: "work"
-
     Background:
 
     BoxLayout:
@@ -93,73 +112,152 @@ WindowManager:
 
         Label:
             text: "Work Page"
-            font_size: 32
+            font_size: 48
+            bold: True
+            font_name: "fonts/Zapfino.ttf"
+            # color: 0, 0, 0, 1
 
-        Button:
-            text: "Work Details"
-            font_size: 32
-            on_release: 
-                app.root.current = "workdetes"
-                root.manager.transition.direction = "up"
+        BoxLayout:
+            orientation: "vertical"
 
-        Button:
-            text: "Break Time"
-            font_size: 32
-            on_release: 
-                app.root.current = "break"
-                root.manager.transition.direction = "left"
+            Button:
+                text: "START BREAK"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "break"
+                    root.manager.transition.direction = "left"
+
+            Button:
+                text: "END SESSION"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "summary"
+                    root.manager.transition.direction = "left"
+                    
+            Button:
+                text: "WORK DETAILS"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "workdetes"
+                    root.manager.transition.direction = "up"
+
+            Button:
+                text: "BACK HOME"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
 
 <WorkDetesPage@Screen>:
     name: "workdetes"
 
-    Label:
-        text: "Work Detes Page"
-    
-    Button:
-        text: "Back to Work"
-        font_size: 32
-        on_release: 
-            app.root.current = "work"
-            root.manager.transition.direction = "down"
+    Background:
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Work Detes Page"
+            font_size: 48
+            bold: True
+            font_name: "fonts/Zapfino.ttf"
+            # color: 0, 0, 0, 1
+        
+        Button:
+            text: "BACK TO WORK"
+            font_size: 40
+            bold: True
+            pos_hint: {"center_x": .5 }
+            background_color: 0,0,0,0
+            on_release: 
+                app.root.current = "work"
+                root.manager.transition.direction = "down"
     
 <BreakPage@Screen>:
     name: "break"
 
-    Label:
-        text: "Break page"
+    Background:
 
     BoxLayout:
         orientation:"vertical"
         size: root.width, root.height
-    
-        Button:
-            text: "Back to Work"
-            font_size: 32
-            on_release: 
-                app.root.current = "work"
-                root.manager.transition.direction = "right"
+
+        Label:
+            text: "Break page"
+            font_size: 48
+            bold: True
+            font_name: "fonts/Zapfino.ttf"
+            # color: 0, 0, 0, 1
+
+        BoxLayout:
+            orientation:"vertical"
+            size: root.width, root.height
         
-        Button:
-            text: "End Session"
-            font_size: 32
-            on_release: 
-                app.root.current = "summary"
-                root.manager.transition.direction = "left"
+            Button:
+                text: "BACK TO WORK"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "work"
+                    root.manager.transition.direction = "right"
+            
+            Button:
+                text: "END SESSION"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "summary"
+                    root.manager.transition.direction = "left"
+
+            Button:
+                text: "BACK HOME"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
 
 <SummaryPage@Screen>:
     name: "summary"
 
-    Label:
-        text: "Summary page"
+    Background:
 
     BoxLayout:
         orientation:"vertical"
         size: root.width, root.height
+
+        Label:
+            text: "Summary page"
+            font_size: 48
+            bold: True
+            font_name: "fonts/Zapfino.ttf"
+            # color: 0, 0, 0, 1
     
         Button:
-            text: "Back to Home"
-            font_size: 32
+            text: "BACK HOME"
+            font_size: 40
+            bold: True
+            pos_hint: {"center_x": .5 }
+            background_color: 0,0,0,0
             on_release: 
                 app.root.current = "home"
-                root.manager.transition.dxirection = "left"
+                root.manager.transition.direction = "right"
 
