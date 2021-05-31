@@ -8,7 +8,7 @@ WindowManager:
 <Background@FloatLayout>:
     Image:
         id: my_image
-        source: "dark.zip"
+        source: "background.jpg"
         anim_delay: 0.04
         allow_stretch: True
         keep_ratio: False
@@ -77,6 +77,9 @@ WindowManager:
             font_size: 32
             on_release: 
                 app.open_settings()
+        ImageButton:
+            source: "button.jpg"
+            on_release: app.open_settings()
                 
 
 <WorkPage@SecondWindow>

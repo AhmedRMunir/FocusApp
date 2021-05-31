@@ -13,6 +13,12 @@ from kivy.animation import Animation
 from kivy.properties import StringProperty, NumericProperty
 from kivy.uix.floatlayout import FloatLayout
 
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
+
+class ImageButton(ButtonBehavior, Image):
+    pass
+
 class FirstWindow(Screen):
     pass
 
