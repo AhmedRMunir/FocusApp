@@ -47,8 +47,9 @@ WindowManager:
                 Slider:
                     id: work_slider
                     min: 0
-                    max: 100
-                    value: 50
+                    max: 60
+                    value: 25
+                    step: 5
                 Label:
                     text: str(int(work_slider.value))
                     # color: 0, 0, 0, 1
@@ -62,8 +63,9 @@ WindowManager:
                 Slider:
                     id: break_slider
                     min: 0
-                    max: 100
-                    value: 50
+                    max: 30
+                    value: 5
+                    step: 5
                 Label:
                     text: str(int(break_slider.value))
                     # color: 0, 0, 0, 1
@@ -90,6 +92,7 @@ WindowManager:
                 on_release: 
                     app.root.current = "work"
                     root.manager.transition.direction = "left"
+                    # self.app.root.start(self)
             Button:
                 size_hint: None, None
                 pos_hint: { "right": 1 }
@@ -116,6 +119,12 @@ WindowManager:
             bold: True
             font_name: "fonts/Zapfino.ttf"
             # color: 0, 0, 0, 1
+
+        Label:
+            id: work_timer
+            text: "[b]00[/b]:00:00"
+            font_size: 60
+            markup: True
 
         BoxLayout:
             orientation: "vertical"

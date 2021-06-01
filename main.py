@@ -18,28 +18,61 @@ from kivy.lang import Builder
 from settingsjson import settings_json
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
+from kivy.clock import Clock
+from time import strftime
+
+break_timer_seconds = 0
+break_started = False
+
 
 class HomePage(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
+    def start_work_timer(self):
+        self.app.root.get_screen("work").work_started = True
 
 class WorkPage(Screen):
+
+    work_timer_seconds = StringProperty("0")
+    work_started = BooleanProperty(False)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def show_details(self, widget):
         print(widget)
+    
+    def start(self):
+        print(self.parent)
+    
+    def update_work_timer(self, nap):
+        if self.work_started:
+            self.sw_seconds += nap
+        minutes, seconds = divmod(self.sw_seconds, 60)
+        # self.root.get_screen("work").ids["work_timer"].text = strftime("[b]%H[/b]:%M:%S")
+        self.root.get_screen("work").ids["work_timer"].text = f'{int(minutes):02}:{int(seconds):02}'
+    
+    def on_start(self):
+        Clock.schedule_interval(self.update_work_timer, 0)
 
 class WindowManager(ScreenManager):
     pass
 
 # Builder.load_file("phlo.kv")
 class PhloApp(App):
+
+    # Work and Break timer vars
+
     def build(self):
         self.settings_cls = SettingsWithSidebar
         self.use_kivy_settings = False
-        setting = self.config.get('example', 'boolexample')
+        # setting = self.config.get('example', 'boolexample')
         return WindowManager()
     
     def build_config(self, config):
         config.setdefaults("example", {
-            "boolexample": True,
+            "lightmode": False,
             "numericexample": 10,
             "optionsexample": "option2",
             "stringexample": "string",

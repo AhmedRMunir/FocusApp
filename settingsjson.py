@@ -2,12 +2,12 @@ import json
 
 settings_json = json.dumps([
     {'type': 'title',
-     'title': 'example title'},
+     'title': 'App Settings'},
     {'type': 'bool',
-     'title': 'A boolean setting',
-     'desc': 'Boolean description text',
+     'title': 'Light Mode',
+     'desc': 'Enables Light Mode',
      'section': 'example',
-     'key': 'boolexample'},
+     'key': 'lightmode'},
     {'type': 'numeric',
      'title': 'A numeric setting',
      'desc': 'Numeric description text',
