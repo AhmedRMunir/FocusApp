@@ -3,7 +3,7 @@ WindowManager:
 
 <Button>
     font_size: 20
-    size_hint: (0.3, 0.3)
+    # size_hint: (0.3, 0.3)
 
 <Background@FloatLayout>:
     Image:
@@ -41,7 +41,8 @@ WindowManager:
             BoxLayout:
                 orientation: "horizontal"
                 Label:
-                    text: "Max Work Time:"
+                    text: "Work Time:"
+                    font_size: 35
                     # color: 0, 0, 0, 1
 
                 Slider:
@@ -51,13 +52,15 @@ WindowManager:
                     value: 25
                     step: 5
                 Label:
-                    text: str(int(work_slider.value))
+                    text: str(int(work_slider.value)) + " min"
+                    font_size: 35
                     # color: 0, 0, 0, 1
             
             BoxLayout:
                 orientation: "horizontal"
                 Label:
-                    text: "Max Break Time:"
+                    text: "Break Time:"
+                    font_size: 35
                     # color: 0, 0, 0, 1
 
                 Slider:
@@ -67,7 +70,8 @@ WindowManager:
                     value: 5
                     step: 5
                 Label:
-                    text: str(int(break_slider.value))
+                    text: str(int(break_slider.value)) + " min"
+                    font_size: 35
                     # color: 0, 0, 0, 1
 
         BoxLayout:
@@ -85,14 +89,15 @@ WindowManager:
                     #center_y: self.parent.center_y
             Button:
                 text: "START WORK"
-                bold: True
+                # bold: True
                 font_size: 40
                 pos_hint: { "center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
                     app.root.current = "work"
                     root.manager.transition.direction = "left"
-                    # self.app.root.start(self)
+                    app.root.get_screen("work").work_started = True
+                    app.root.get_screen("home").start_scheduler(self)
             Button:
                 size_hint: None, None
                 pos_hint: { "right": 1 }
@@ -107,6 +112,12 @@ WindowManager:
 
 <WorkPage>:
     name: "work"
+
+    work_started: False
+    work_total_time: 0
+    work_timer_text: "00:00:00"
+
+
     Background:
 
     BoxLayout:
@@ -116,15 +127,28 @@ WindowManager:
         Label:
             text: "Work Page"
             font_size: 48
-            bold: True
+            # bold: True
             font_name: "fonts/Zapfino.ttf"
             # color: 0, 0, 0, 1
+        BoxLayout:
+            orientation: "horizontal"
 
-        Label:
-            id: work_timer
-            text: "[b]00[/b]:00:00"
-            font_size: 60
-            markup: True
+            Label:
+
+            Label:
+                id: work_timer
+                text: root.work_timer_text
+                font_size: 60
+                markup: True
+
+            Button:
+                text: "+5 min"
+                font_size: 40
+                # size_hint: (None, 1)
+                # size: 100, None
+                background_color: 0,0,0,0
+                on_release: 
+                    root.work_total_time += 5 * 60
 
         BoxLayout:
             orientation: "vertical"
@@ -132,7 +156,7 @@ WindowManager:
             Button:
                 text: "START BREAK"
                 font_size: 40
-                bold: True
+                # bold: True
                 pos_hint: {"center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
@@ -142,7 +166,7 @@ WindowManager:
             Button:
                 text: "END SESSION"
                 font_size: 40
-                bold: True
+                # bold: True
                 pos_hint: {"center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
@@ -152,7 +176,7 @@ WindowManager:
             Button:
                 text: "WORK DETAILS"
                 font_size: 40
-                bold: True
+                # bold: True
                 pos_hint: {"center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
@@ -162,7 +186,7 @@ WindowManager:
             Button:
                 text: "BACK HOME"
                 font_size: 40
-                bold: True
+                # bold: True
                 pos_hint: {"center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
@@ -180,14 +204,14 @@ WindowManager:
         Label:
             text: "Work Detes Page"
             font_size: 48
-            bold: True
+            # bold: True
             font_name: "fonts/Zapfino.ttf"
             # color: 0, 0, 0, 1
         
         Button:
             text: "BACK TO WORK"
             font_size: 40
-            bold: True
+            # bold: True
             pos_hint: {"center_x": .5 }
             background_color: 0,0,0,0
             on_release: 
