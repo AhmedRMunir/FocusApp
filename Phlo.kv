@@ -105,10 +105,9 @@ WindowManager:
                 on_release: 
                     app.open_settings()
                 Image: 
-                    source: "Buttons/SettingsIcon.jpg" if self.parent.state=="normal" else "Buttons/SettingsIconPressed.jpg"
+                    source: "Buttons/SettingsIcon_normal.png" if self.parent.state=="normal" else "Buttons/SettingsIcon_pressed.png"
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
-
 
 <WorkPage>:
     name: "work"
@@ -125,7 +124,7 @@ WindowManager:
         size: root.width, root.height
 
         Label:
-            text: "Work Page"
+            text: "Work Time:"
             font_size: 48
             # bold: True
             font_name: "fonts/Zapfino.ttf"
@@ -162,16 +161,6 @@ WindowManager:
                 on_release: 
                     app.root.current = "break"
                     root.manager.transition.direction = "left"
-
-            Button:
-                text: "END SESSION"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "summary"
-                    root.manager.transition.direction = "left"
                     
             Button:
                 text: "WORK DETAILS"
@@ -184,14 +173,15 @@ WindowManager:
                     root.manager.transition.direction = "up"
 
             Button:
-                text: "BACK HOME"
+                text: "END SESSION"
                 font_size: 40
                 # bold: True
                 pos_hint: {"center_x": .5 }
                 background_color: 0,0,0,0
                 on_release: 
-                    app.root.current = "home"
-                    root.manager.transition.direction = "right"
+                    app.root.current = "summary"
+                    root.manager.transition.direction = "left"
+
 
 <WorkDetesPage@Screen>:
     name: "workdetes"
@@ -202,7 +192,7 @@ WindowManager:
         orientation: "vertical"
 
         Label:
-            text: "Work Detes Page"
+            text: "Work Details:"
             font_size: 48
             # bold: True
             font_name: "fonts/Zapfino.ttf"
@@ -228,11 +218,17 @@ WindowManager:
         size: root.width, root.height
 
         Label:
-            text: "Break page"
+            text: "Break Time:"
             font_size: 48
             bold: True
-            font_name: "fonts/Zapfino.ttf"
+            #font_name: "fonts/Skia.ttf"
             # color: 0, 0, 0, 1
+
+        Label:
+            id: work_timer
+            text: "[b]00[/b]:00:00"
+            font_size: 60
+            markup: True
 
         BoxLayout:
             orientation:"vertical"
@@ -247,7 +243,17 @@ WindowManager:
                 on_release: 
                     app.root.current = "work"
                     root.manager.transition.direction = "right"
-            
+
+            Button:
+                text: "WORK DETAILS"
+                font_size: 40
+                bold: True
+                pos_hint: {"center_x": .5 }
+                background_color: 0,0,0,0
+                on_release: 
+                    app.root.current = "workdetes"
+                    root.manager.transition.direction = "up"
+
             Button:
                 text: "END SESSION"
                 font_size: 40
@@ -257,16 +263,6 @@ WindowManager:
                 on_release: 
                     app.root.current = "summary"
                     root.manager.transition.direction = "left"
-
-            Button:
-                text: "BACK HOME"
-                font_size: 40
-                bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "home"
-                    root.manager.transition.direction = "right"
 
 <SummaryPage@Screen>:
     name: "summary"
@@ -278,10 +274,10 @@ WindowManager:
         size: root.width, root.height
 
         Label:
-            text: "Summary page"
+            text: "Work Summary:"
             font_size: 48
             bold: True
-            font_name: "fonts/Zapfino.ttf"
+            #font_name: "fonts/Skia.ttf"
             # color: 0, 0, 0, 1
     
         Button:
