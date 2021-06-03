@@ -1,14 +1,56 @@
 #:kivy 2.0
+#:import MeshLinePlot kivy_garden.graph.MeshLinePlot
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import SlideTransition kivy.uix.screenmanager.SlideTransition
+#: import CardTransition kivy.uix.screenmanager.CardTransition
+#: import SwapTransition kivy.uix.screenmanager.SwapTransition
+#: import WipeTransition kivy.uix.screenmanager.WipeTransition
+#: import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#: import FallOutTransition kivy.uix.screenmanager.FallOutTransition
+#: import NoTransition kivy.uix.screenmanager.NoTransition
 WindowManager:
 
 <Button>
     font_size: 20
     # size_hint: (0.3, 0.3)
 
-<Background@FloatLayout>:
+<RoundedButton@Button>:
+    background_color: (0, 0, 0, 0)
+    background_normal: ''
+    canvas.before:
+        Color:
+            rgba: (48/255, 84/255, 150/255, 1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [58]
+
+# <SetGraph>:
+#     graph_test : graph_test
+#     Graph:
+#     id: graph_test
+#     plot: MeshLinePlot
+#     xlabel:'X'
+#     ylabel:'Y'
+#     x_ticks_minor:5
+#     x_tics_major:25
+#     y_ticks_major:1
+#     y_grid_label:True
+#     x_grid_label:True
+#     padding:5
+#     x_grid:True
+#     y_grid:True
+#     xmin:-0
+#     xmax:100
+#     ymin:-1
+#     ymax:1
+#     pos: 0, root.height / 6
+#     size: root.width * 2 / 3 , root.height * 18 / 24
+
+<Background>:
     Image:
         id: my_image
-        source: "dark.zip"
+        source: app.theme
         anim_delay: 0.04
         allow_stretch: True
         keep_ratio: False
@@ -87,17 +129,24 @@ WindowManager:
                     #size_hint: .3, .3 
                     #center_x: self.parent.center_x
                     #center_y: self.parent.center_y
-            Button:
+            RoundedButton:
                 text: "START WORK"
                 # bold: True
-                font_size: 40
+                text_size: self.width, None
+                font_size: "40dp" if len(self.text) < 50 else "20dp"
+                valign: "middle"
+                halign: "center"
                 pos_hint: { "center_x": .5 }
                 background_color: 0,0,0,0
+                on_press:
+                    app.root.transition = NoTransition()
                 on_release: 
                     app.root.current = "work"
-                    root.manager.transition.direction = "left"
-                    app.root.get_screen("work").work_started = True
-                    app.root.get_screen("home").start_scheduler(self)
+                    # root.manager.transition.direction = "left"
+                    # app.root.get_screen("work").work_started = True
+                    app.root.get_screen("home").increment_work_time(self)
+                    app.root.get_screen("home").increment_break_time(self)
+                    app.start_stop_work_timer(self)
             Button:
                 size_hint: None, None
                 pos_hint: { "right": 1 }
@@ -153,7 +202,7 @@ WindowManager:
             orientation: "vertical"
 
             Button:
-                text: "START BREAK"
+                text: "TAKE BREAK"
                 font_size: 40
                 # bold: True
                 pos_hint: {"center_x": .5 }
@@ -161,6 +210,9 @@ WindowManager:
                 on_release: 
                     app.root.current = "break"
                     root.manager.transition.direction = "left"
+                    # app.root.get_screen("work").work_started = False
+                    app.start_stop_work_timer(self)
+                    app.start_stop_break_timer(self)
                     
             Button:
                 text: "WORK DETAILS"
@@ -181,6 +233,9 @@ WindowManager:
                 on_release: 
                     app.root.current = "summary"
                     root.manager.transition.direction = "left"
+                    app.start_stop_work_timer(self)
+                    app.reset_work_timer(self)
+                    app.reset_break_timer(self)
 
 
 <WorkDetesPage@Screen>:
@@ -211,6 +266,10 @@ WindowManager:
 <BreakPage@Screen>:
     name: "break"
 
+    break_started: False
+    break_total_time: 0
+    break_timer_text: "00:00:00"
+
     Background:
 
     BoxLayout:
@@ -224,11 +283,25 @@ WindowManager:
             #font_name: "fonts/Skia.ttf"
             # color: 0, 0, 0, 1
 
-        Label:
-            id: work_timer
-            text: "[b]00[/b]:00:00"
-            font_size: 60
-            markup: True
+        BoxLayout:
+            orientation: "horizontal"
+
+            Label:
+
+            Label:
+                id: work_timer
+                text: root.break_timer_text
+                font_size: 60
+                # markup: True
+
+            Button:
+                text: "+1 min"
+                font_size: 40
+                # size_hint: (None, 1)
+                # size: 100, None
+                background_color: 0,0,0,0
+                on_release: 
+                    root.break_total_time += 1 * 60
 
         BoxLayout:
             orientation:"vertical"
@@ -243,6 +316,10 @@ WindowManager:
                 on_release: 
                     app.root.current = "work"
                     root.manager.transition.direction = "right"
+                    # app.root.get_screen("work").work_started = True
+                    # app.start_work_scheduler(self)
+                    app.start_stop_work_timer(self)
+                    app.start_stop_break_timer(self)
 
             Button:
                 text: "WORK DETAILS"
@@ -263,6 +340,9 @@ WindowManager:
                 on_release: 
                     app.root.current = "summary"
                     root.manager.transition.direction = "left"
+                    app.start_stop_break_timer(self)
+                    app.reset_work_timer(self)
+                    app.reset_break_timer(self)
 
 <SummaryPage@Screen>:
     name: "summary"
