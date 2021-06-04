@@ -1,124 +1,137 @@
-from time import strftime
 from kivy.app import App
-from kivy.core.window import Window
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.stacklayout import StackLayout
-from kivy.metrics import dp
-from kivy.properties import StringProperty, BooleanProperty
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.label import Label
-from kivy.animation import Animation
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.settings import SettingsWithSidebar
 from kivy.lang import Builder
-from settingsjson import settings_json
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.image import Image
-from kivy.clock import Clock
-from datetime import date, datetime, timedelta
-from math import sin
-from kivy_garden.graph import Graph, MeshLinePlot
-from kivy.uix.screenmanager import CardTransition
-
+from kivymd.app import MDApp
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty, OptionProperty
+from kivymd.uix.picker import MDTimePicker
 from kivy.core.window import Window
-Window.size = (600, 600)
+from datetime import date, datetime
+from time import strftime, asctime
+from kivy.clock import Clock
+from kivymd.uix.list import OneLineAvatarIconListItem
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.screen import MDScreen
+
+Window.size = (400, 800)
 
 class WindowManager(ScreenManager):
     pass
-        
+
+class ContentNavigationDrawer(BoxLayout):
+    screen_manager = ObjectProperty()
+    nav_drawer = ObjectProperty()
+
+
+class LoginPage(Screen):
+    pass
 
 class HomePage(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    
     def increment_work_time(self, *args):
-        # App.get_running_app().work_scheduler = Clock.schedule_interval(self.update_work_timer, 0)
-        App.get_running_app().root.get_screen("work").work_total_time += self.ids["work_slider"].value * 60 + 1
+        # print(self.work_increment)
+        App.get_running_app().root.ids["window_manager"].get_screen("work").work_total_time += self.work_increment
 
     def increment_break_time(self, *args):
-        # App.get_running_app().work_scheduler = Clock.schedule_interval(self.update_work_timer, 0)
-        App.get_running_app().root.get_screen("break").break_total_time += self.ids["break_slider"].value * 60 + 1
+        App.get_running_app().root.ids["window_manager"].get_screen("break").break_total_time += self.break_increment
+        
 
-class WorkPage(Screen):
-    pass
 
-class WorkDetesPage(Screen):
-    # def __init__(self, **kwargs):
-        # disp = SetGraph()
-        # disp.update_graph()
-        # self.add_widget(disp)
-    pass
+class PhloApp(MDApp):
 
-class SetGraph(Widget):
-    graph_test = ObjectProperty(None)
+    isWork = None
+    work_started = False
+    break_started = False
 
-    def update_graph(self):
-        plot = MeshLinePlot(color=[1, 0, 0, 1])
-        plot.points = [(x, sin(x / 10.)) for x in range(0, 101)]
-        self.graph_test.add_plot(plot)
-
-class Background(FloatLayout):
-    pass
-
-# Builder.load_file("phlo.kv")
-class PhloApp(App):
-
-    # App.get_running_app().root.transition
-
-    # Work and Break timer vars
-    work_timer_seconds = 0
-    work_started = BooleanProperty(False)
-
-    break_timer_seconds = 0
-    break_started = BooleanProperty(False)
-
-    # Temporary background change
-    dark_mode = "dark.zip"
-    light_mode = "green_background.jpg"
-    theme = light_mode
+    # data = {
+    #     'Python': 'language-python',
+    #     'PHP': 'language-php',
+    #     'C++': 'language-cpp'
+    # }
     
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        menu_items = [{"text": f'Item {i}'} for i in range(5)]
+
+        # self.menu = MDDropDownMenu(
+        #     caller = self.root.ids["window_manager"].get_screen("home").ids["dropdown_item"],
+        #     items = menu_items,
+        #     position = "center",
+        #     width_mult = 4
+        # )
+        # self.menu.bind(on_release=self.set_item)
+        # print(self.root.ids["window_manager"].get_screen("home"))
+        # self.menu = MDDropdownMenu(
+        #     caller=self.root.ids["window_manager"].get_screen("home").ids["dropdown_item"],
+        #     items=menu_items,
+        #     position="center",
+        #     width_mult=4,
+        # )
     
+    def set_item(self, instance_menu, instance_menu_item):
+        self.root.ids["window_manager"].get_screen("home").ids["dropdown_item"].set_item(instance_menu_item.text)
+        instance_menu.dismiss()
+
     def build(self):
-        self.settings_cls = SettingsWithSidebar
-        self.use_kivy_settings = False
-        # setting = self.config.get('example', 'boolexample')
-        return WindowManager()
-    
-    def build_config(self, config):
-        config.setdefaults("example", {
-            "lightmode": False,
-            "numericexample": 10,
-            "optionsexample": "option2",
-            "stringexample": "string",
-            "pathexample": "/path"
-        })
-    
-    def build_settings(self, settings):
-        settings.add_json_panel("Panel Name", 
-                                 self.config,
-                                 data=settings_json)
-    
-    def on_config_change(self, config, section, key, value):
-        if self.config.get('example', 'lightmode'):
-            self.theme = self.light_mode
-            print(App.get_running_app().root)
-        elif self.config.get('example', 'lightmode') == 0:
-            self.theme = self.dark_mode
-        # print(config, section, key, value)
+        self.theme_cls.theme_style = "Light"
+        self.theme_cls.primary_palette = "Purple"
+        # self.theme_cls.accent_palette = "Yellow"
 
-    def reset_work_timer(self, *args):
-        App.get_running_app().root.get_screen("work").work_total_time = 0
-        self.update_work_timer(self, 0)
-
-    def reset_break_timer(self, *args):
-        App.get_running_app().root.get_screen("break").break_total_time = 0
-        self.update_break_timer(self, 0)
+        # screen = MDScreen()
+        # speed_dial = MDFloatingActionButtonSpeedDial()
+        # speed_dial.data = self.data
+        # speed_dial.root_button_anim = True
+        # screen.add_widget(speed_dial)
+        # return screen
+        # return Builder.load_file("phlo.kv")
+        # return Builder.load_string(KV)
     
+    def login(self):
+        pass
+        # self.root.ids["window_manager"].get_screen("login").ids["welcome_label"].text = f'Welcome {self.root.ids["window_manager"].get_screen("login").ids["user"].text}!'
+    
+    def clear(self):
+        self.root.ids["window_manager"].get_screen("login").ids["user"].text = ""
+        self.root.ids["window_manager"].get_screen("login").ids["password"].text = ""
+
+    def show_time_picker(self, widget, time):
+        previous_time = datetime.strptime(time, '%H:%M:%S').time()
+        time_dialog = MDTimePicker()
+        time_dialog.set_time(previous_time)
+        self.isWork = widget.isWork
+        time_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        time_dialog.open()
+    
+    def get_time(self, instance, time):
+        '''
+        The method returns the set time.
+
+        :type instance: <kivymd.uix.picker.MDTimePicker object>
+        :type time: <class 'datetime.time'>
+        '''
+        print(time)
+
+        return time
+    
+    def on_save(self, instance, value):
+        # self.root.ids["window_manager"].get_screen("home").ids["work_timer"].text = "4"
+        total_time_increment = 0
+        total_time_increment += int(value.strftime("%H")) * 60 * 60
+        total_time_increment += int(value.strftime("%M")) * 60
+        total_time_increment += int(value.strftime("%S"))
+
+        if self.isWork:
+            self.root.ids["window_manager"].get_screen("home").ids["work_time_picker"].text = value.strftime("%H:%M:00")
+            # self.root.ids["window_manager"].get_screen("home").work_increment = value.strftime("%H:%M:00")
+            self.root.ids["window_manager"].get_screen("home").work_increment = total_time_increment
+        else:
+            self.root.ids["window_manager"].get_screen("home").ids["break_time_picker"].text = value.strftime("%H:%M:00")
+            self.root.ids["window_manager"].get_screen("home").break_increment = total_time_increment
+
+    def on_cancel(self, instance, value):
+        pass
+
     def start_stop_work_timer(self, *args):
         if not self.work_started:
             self.work_scheduler = Clock.schedule_interval(self.update_work_timer, 0)
@@ -128,7 +141,7 @@ class PhloApp(App):
             self.work_started = False
     
     def update_work_timer(self, nap, *args):
-        workpage = App.get_running_app().root.get_screen("work")
+        workpage = self.root.ids["window_manager"].get_screen("work")
         if self.work_started:
             workpage.work_total_time -= nap
 
@@ -136,23 +149,58 @@ class PhloApp(App):
             hours, minutes = divmod(minutes, 60)
             workpage.work_timer_text = f'{int(hours):02}:{int(minutes):02}:{int(seconds):02}'
     
+    def show_hide_work_timer(self, *args):
+        opacity = self.root.ids["window_manager"].get_screen("work").ids["work_timer"].opacity
+        if opacity > 0:
+            self.root.ids["window_manager"].get_screen("work").ids["work_timer"].opacity = 0
+        else:
+            self.root.ids["window_manager"].get_screen("work").ids["work_timer"].opacity = 1.0
+
     def start_stop_break_timer(self, *args):
         if not self.break_started:
-            print("break started")
             self.break_scheduler = Clock.schedule_interval(self.update_break_timer, 0)
             self.break_started = True
         else:
             self.break_scheduler.cancel()
             self.break_started = False
-            print("break stopped")
     
     def update_break_timer(self, nap, *args):
-        breakpage = App.get_running_app().root.get_screen("break")
+        breakpage = self.root.ids["window_manager"].get_screen("break")
         if self.break_started:
             breakpage.break_total_time -= nap
 
             minutes, seconds = divmod(breakpage.break_total_time, 60)
             hours, minutes = divmod(minutes, 60)
             breakpage.break_timer_text = f'{int(hours):02}:{int(minutes):02}:{int(seconds):02}'
+    
+    def show_hide_break_timer(self, *args):
+        opacity = self.root.ids["window_manager"].get_screen("break").ids["break_timer"].opacity
+        if opacity > 0:
+            self.root.ids["window_manager"].get_screen("break").ids["break_timer"].opacity = 0
+        else:
+            self.root.ids["window_manager"].get_screen("break").ids["break_timer"].opacity = 1.0
+
+    def callback(self, instance):
+        if instance.icon == "coffee":
+            if (self.root.ids["window_manager"].current == "break"):
+                self.root.ids["window_manager"].current = "work"
+                self.root.ids["window_manager"].transition.direction = "right"
+            else:
+                self.root.ids["window_manager"].current = "break"
+                self.root.ids["window_manager"].transition.direction = "left"
+            self.start_stop_work_timer(self)
+            self.start_stop_break_timer(self)
+        elif instance.icon == "trending-up":
+            print("Show Graph")
+        elif instance.icon == "cancel":
+            if (self.work_started):
+                self.start_stop_work_timer(self)
+            
+            if (self.break_started):
+                self.start_stop_break_timer(self)
+            self.root.ids["window_manager"].current = "summary"
+
+            # print(self.root.ids["window_manager"].get_screen("work").ids["work_float"].state.options)
+            # self.root.ids["window_manager"].get_screen("work").ids["work_float"].state = state = OptionProperty("open", options=("close", "open"))
 
 PhloApp().run()

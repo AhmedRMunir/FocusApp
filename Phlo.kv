@@ -1,372 +1,332 @@
 #:kivy 2.0
-#:import MeshLinePlot kivy_garden.graph.MeshLinePlot
-#: import FadeTransition kivy.uix.screenmanager.FadeTransition
-#: import SlideTransition kivy.uix.screenmanager.SlideTransition
-#: import CardTransition kivy.uix.screenmanager.CardTransition
-#: import SwapTransition kivy.uix.screenmanager.SwapTransition
-#: import WipeTransition kivy.uix.screenmanager.WipeTransition
-#: import RiseInTransition kivy.uix.screenmanager.RiseInTransition
-#: import FallOutTransition kivy.uix.screenmanager.FallOutTransition
-#: import NoTransition kivy.uix.screenmanager.NoTransition
-WindowManager:
 
-<Button>
-    font_size: 20
-    # size_hint: (0.3, 0.3)
+Screen:
 
-<RoundedButton@Button>:
-    background_color: (0, 0, 0, 0)
-    background_normal: ''
-    canvas.before:
-        Color:
-            rgba: (48/255, 84/255, 150/255, 1)
-        RoundedRectangle:
-            size: self.size
-            pos: self.pos
-            radius: [58]
+    MDToolbar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "                    Phloü"
+        # halign: "center"
+        
+        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
 
-# <SetGraph>:
-#     graph_test : graph_test
-#     Graph:
-#     id: graph_test
-#     plot: MeshLinePlot
-#     xlabel:'X'
-#     ylabel:'Y'
-#     x_ticks_minor:5
-#     x_tics_major:25
-#     y_ticks_major:1
-#     y_grid_label:True
-#     x_grid_label:True
-#     padding:5
-#     x_grid:True
-#     y_grid:True
-#     xmin:-0
-#     xmax:100
-#     ymin:-1
-#     ymax:1
-#     pos: 0, root.height / 6
-#     size: root.width * 2 / 3 , root.height * 18 / 24
+    MDNavigationLayout:
 
-<Background>:
-    Image:
-        id: my_image
-        source: app.theme
-        anim_delay: 0.04
-        allow_stretch: True
-        keep_ratio: False
+        x: toolbar.height
 
-<WindowManager>:
-    HomePage:
-    WorkPage:
-    WorkDetesPage:
-    BreakPage:
-    SummaryPage:
+        WindowManager:
+            id: window_manager
+            LoginPage:
+            HomePage:
+            WorkPage:
+            BreakPage:
+            SummaryPage:
+        
 
-<HomePage>:
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            # type: "standard"
+            opening_time: 0.4
+            closing_time: 0.4
+
+            ContentNavigationDrawer:
+                screen_manager: window_manager
+                nav_drawer: nav_drawer
+
+                MDLabel:
+                    text: "hello"
+
+# <NavDrawer@MDNavigationLayout>:
+
+
+
+# <WindowManager>:
+#     LoginPage:
+#     HomePage:
+
+<LoginPage@Screen>:
+    name: "login"
+
+    MDCard:
+        size_hint: None, None
+        size: 300, 400
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 25
+        padding: 25
+        spacing: 25
+        orientation: "vertical"
+        radius: 10
+
+        MDLabel:
+            id: welcome_label
+            text: "Welcome"
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 15
+
+        MDTextField:
+            id: user
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 200
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+            # color_mode: 'custom'
+            line_color_focus: 1, 1, 1, 1
+
+        MDTextField:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 200
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+            password: True
+
+        MDRoundFlatButton:
+            text: "Log In"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: app.login()
+            on_release:
+                app.root.ids["window_manager"].current = "home"
+
+        MDRoundFlatButton:
+            text: "Clear"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: app.clear()
+
+        Widget:
+            size_hint_y: None
+            height: 0
+
+<HomePage@MDScreen>:
     name: "home"
 
-    Background:
-
-    BoxLayout:
-        orientation:"vertical"
-        size: root.width, root.height
-
-        Label:
-            text: "Welcome to Phlo"
-            font_size: 48
-            bold: True
-            font_name: "fonts/Zapfino.ttf"
-            # color: 0, 0, 0, 1
-        BoxLayout:
-            orientation: "vertical"
-        
-            BoxLayout:
-                orientation: "horizontal"
-                Label:
-                    text: "Work Time:"
-                    font_size: 35
-                    # color: 0, 0, 0, 1
-
-                Slider:
-                    id: work_slider
-                    min: 0
-                    max: 60
-                    value: 25
-                    step: 5
-                Label:
-                    text: str(int(work_slider.value)) + " min"
-                    font_size: 35
-                    # color: 0, 0, 0, 1
-            
-            BoxLayout:
-                orientation: "horizontal"
-                Label:
-                    text: "Break Time:"
-                    font_size: 35
-                    # color: 0, 0, 0, 1
-
-                Slider:
-                    id: break_slider
-                    min: 0
-                    max: 30
-                    value: 5
-                    step: 5
-                Label:
-                    text: str(int(break_slider.value)) + " min"
-                    font_size: 35
-                    # color: 0, 0, 0, 1
-
-        BoxLayout:
-            orientation: "horizontal"
-            Button:
-                #text: "Connection Button"
-                #font_size: 32
-                size_hint: None, None
-                pos_hint: { "right": 1 }
-                background_color: 0,0,0,0
-                #Image: 
-                    #source: "Buttons/ButtonOn.jpg" if self.parent.state=="normal" else "Buttons/ButtonOff.jpg"
-                    #size_hint: .3, .3 
-                    #center_x: self.parent.center_x
-                    #center_y: self.parent.center_y
-            RoundedButton:
-                text: "START WORK"
-                # bold: True
-                text_size: self.width, None
-                font_size: "40dp" if len(self.text) < 50 else "20dp"
-                valign: "middle"
-                halign: "center"
-                pos_hint: { "center_x": .5 }
-                background_color: 0,0,0,0
-                on_press:
-                    app.root.transition = NoTransition()
-                on_release: 
-                    app.root.current = "work"
-                    # root.manager.transition.direction = "left"
-                    # app.root.get_screen("work").work_started = True
-                    app.root.get_screen("home").increment_work_time(self)
-                    app.root.get_screen("home").increment_break_time(self)
-                    app.start_stop_work_timer(self)
-            Button:
-                size_hint: None, None
-                pos_hint: { "right": 1 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.open_settings()
-                Image: 
-                    source: "Buttons/SettingsIcon_normal.png" if self.parent.state=="normal" else "Buttons/SettingsIcon_pressed.png"
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-
-<WorkPage>:
-    name: "work"
-
-    work_started: False
-    work_total_time: 0
-    work_timer_text: "00:00:00"
-
-
-    Background:
-
-    BoxLayout:
-        orientation:"vertical"
-        size: root.width, root.height
-
-        Label:
-            text: "Work Time:"
-            font_size: 48
-            # bold: True
-            # font_name: "fonts/Zapfino.ttf"
-            # color: 0, 0, 0, 1
-        BoxLayout:
-            orientation: "horizontal"
-
-            Label:
-
-            Label:
-                id: work_timer
-                text: root.work_timer_text
-                font_size: 60
-                markup: True
-
-            Button:
-                text: "+5 min"
-                font_size: 40
-                # size_hint: (None, 1)
-                # size: 100, None
-                background_color: 0,0,0,0
-                on_release: 
-                    root.work_total_time += 5 * 60
-
-        BoxLayout:
-            orientation: "vertical"
-
-            Button:
-                text: "TAKE BREAK"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "break"
-                    root.manager.transition.direction = "left"
-                    # app.root.get_screen("work").work_started = False
-                    app.start_stop_work_timer(self)
-                    app.start_stop_break_timer(self)
-                    
-            Button:
-                text: "WORK DETAILS"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "workdetes"
-                    root.manager.transition.direction = "up"
-
-            Button:
-                text: "END SESSION"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "summary"
-                    root.manager.transition.direction = "left"
-                    app.start_stop_work_timer(self)
-                    app.reset_work_timer(self)
-                    app.reset_break_timer(self)
-
-
-<WorkDetesPage@Screen>:
-    name: "workdetes"
-
-    Background:
+    work_increment: 4 * 60 * 60
+    break_increment: 1 * 30 * 60
 
     BoxLayout:
         orientation: "vertical"
 
-        Label:
-            text: "Work Details:"
-            font_size: 48
-            # bold: True
-            # font_name: "fonts/Zapfino.ttf"
-            # color: 0, 0, 0, 1
+        BoxLayout:
+            orientation: "horizontal"
+
+            Widget:
+                size_hint_x: None
+                width: 20
         
-        Button:
-            text: "BACK TO WORK"
-            font_size: 40
-            # bold: True
-            pos_hint: {"center_x": .5 }
-            background_color: 0,0,0,0
-            on_release: 
-                app.root.current = "work"
-                root.manager.transition.direction = "down"
-    
-<BreakPage@Screen>:
-    name: "break"
+            MDLabel:
+                text: "Work Until:"
+                font_size: 20
+                halign: 'center'
+                size_hint_y: None
+                # size_hint_x: None
+                height: self.texture_size[1]
+            
+            MDLabel:
+                id: work_time_picker
+                text: "4:00:00"
+                font_size: 20
+                halign: 'center'
+                size_hint_y: None
+                size_hint_x: None
+                height: self.texture_size[1]
+            
+            MDRoundFlatIconButton:
+                icon: "timer-sand"
+                isWork: True
+                text: "Choose Time"
+                font_size: 15
+                halign: 'center'
+                size_hint_y: None
+                size_hint_x: None
+                pos_hint: {"center_y": 0.1}
+                on_release:
+                    app.show_time_picker(self, work_time_picker.text)
+            
+            Widget:
+                size_hint_x: None
+                width: 20
+        
+        BoxLayout:
+            orientation: "horizontal"
 
-    break_started: False
-    break_total_time: 0
-    break_timer_text: "00:00:00"
+            Widget:
+                size_hint_x: None
+                width: 20
+        
+            MDLabel:
+                text: "Break Time:"
+                font_size: 20
+                halign: 'center'
+                size_hint_y: None
+                # size_hint_x: None
+                height: self.texture_size[1]
+            
+            MDLabel:
+                id: break_time_picker
+                text: "00:30:00"
+                font_size: 20
+                halign: 'center'
+                size_hint_y: None
+                size_hint_x: None
+                height: self.texture_size[1]
+            
+            MDRoundFlatIconButton:
+                icon: "timer-sand"
+                isWork: False
+                text: "Choose Time"
+                font_size: 15
+                halign: 'center'
+                size_hint_y: None
+                size_hint_x: None
+                pos_hint: {"center_y": 0.1}
+                on_release:
+                    app.show_time_picker(self, break_time_picker.text)
+            
+            Widget:
+                size_hint_x: None
+                width: 20
+        
+        Widget:
 
-    Background:
+        MDLabel:
+            text: "Choose Task"
+            font_size: 20
+            halign: 'center'
+            size_hint_y: None
+            size_hint_x: 1
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            height: self.texture_size[1]
+
+        MDDropDownItem:
+            id: dropdown_item
+            text: "Item 0"
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            current_item: "Item 0"
+            on_release: app.menu.open()
+
+        Widget:
+                
+        MDRoundFlatButton:
+            text: "Start Work"
+            font_size: 15
+            halign: 'center'
+            size_hint_y: None
+            size_hint_x: None
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            on_release:
+                app.root.ids["window_manager"].current = "work"
+                app.root.ids["window_manager"].get_screen("home").increment_work_time()
+                app.root.ids["window_manager"].get_screen("home").increment_break_time()
+                app.start_stop_work_timer()
+        Widget:
+
+<WorkPage@Screen>:
+    name: "work"
+    work_timer_text: "00:00:00"
+    work_total_time: 0
 
     BoxLayout:
-        orientation:"vertical"
-        size: root.width, root.height
+        orientation: "vertical"
 
-        Label:
-            text: "Break Time:"
-            font_size: 48
-            # bold: True
-            #font_name: "fonts/Skia.ttf"
-            # color: 0, 0, 0, 1
+        Widget:
+
+        MDLabel:
+            id: work_timer
+            text: root.work_timer_text
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 15
 
         BoxLayout:
             orientation: "horizontal"
 
-            Label:
+            Widget:
 
-            Label:
-                id: work_timer
-                text: root.break_timer_text
-                font_size: 60
-                # markup: True
+            MDLabel:
+                text: "Hide/Show Timer"
+                pos_hint: {"center_x": 0.5, "center_y": 0.9}
 
-            Button:
-                text: "+1 min"
-                font_size: 40
-                # size_hint: (None, 1)
-                # size: 100, None
-                background_color: 0,0,0,0
-                on_release: 
-                    root.break_total_time += 1 * 60
+            MDSwitch:
+                pos_hint: {"center_x": 0.5, "center_y": 0.9}
+                active: False
+                on_active: 
+                    app.show_hide_work_timer()
+            
+            Widget:
+
+
+    MDFloatingActionButtonSpeedDial:
+        id: work_float
+        data: {'Trake Break': 'coffee','Work Details': 'trending-up','End Session': 'cancel'}
+        root_button_anim: True
+        # hint_animation: True
+        bg_hint_color: app.theme_cls.primary_light
+        icon: "dog"
+        callback: app.callback
+
+<BreakPage@Screen>:
+    name: "break"
+    break_timer_text: "00:00:00"
+    break_total_time: 0
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Widget:
+
+        MDLabel:
+            id: break_timer
+            text: root.break_timer_text
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 15
 
         BoxLayout:
-            orientation:"vertical"
-            size: root.width, root.height
-        
-            Button:
-                text: "BACK TO WORK"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "work"
-                    root.manager.transition.direction = "right"
-                    # app.root.get_screen("work").work_started = True
-                    # app.start_work_scheduler(self)
-                    app.start_stop_work_timer(self)
-                    app.start_stop_break_timer(self)
+            orientation: "horizontal"
 
-            Button:
-                text: "WORK DETAILS"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "workdetes"
-                    root.manager.transition.direction = "up"
+            Widget:
 
-            Button:
-                text: "END SESSION"
-                font_size: 40
-                # bold: True
-                pos_hint: {"center_x": .5 }
-                background_color: 0,0,0,0
-                on_release: 
-                    app.root.current = "summary"
-                    root.manager.transition.direction = "left"
-                    app.start_stop_break_timer(self)
-                    app.reset_work_timer(self)
-                    app.reset_break_timer(self)
+            MDLabel:
+                text: "Hide/Show Timer"
+                pos_hint: {"center_x": 0.5, "center_y": 0.9}
+
+            MDSwitch:
+                pos_hint: {"center_x": 0.5, "center_y": 0.9}
+                active: False
+                on_active: 
+                    app.show_hide_break_timer()
+            
+            Widget:
+
+
+    MDFloatingActionButtonSpeedDial:
+        id: break_float
+        data: {'Back to Work': 'coffee','Work Details': 'trending-up','End Session': 'cancel'}
+        root_button_anim: True
+        # hint_animation: True
+        bg_hint_color: app.theme_cls.primary_light
+        icon: "dog"
+        callback: app.callback
 
 <SummaryPage@Screen>:
     name: "summary"
+    # MDLabel:
+    #     text:"Summary"
 
-    Background:
-
-    BoxLayout:
-        orientation:"vertical"
-        size: root.width, root.height
-
-        Label:
-            text: "Work Summary:"
-            font_size: 48
-            # bold: True
-            #font_name: "fonts/Skia.ttf"
-            # color: 0, 0, 0, 1
-    
-        Button:
-            text: "BACK HOME"
-            font_size: 40
-            # bold: True
-            pos_hint: {"center_x": .5 }
-            background_color: 0,0,0,0
-            on_release: 
-                app.root.current = "home"
-                root.manager.transition.direction = "right"
-
+    # MDRoundFlatButton:
+    #     text: "Back Home"
+    #     pos_hint: {"center_x": 0.5, "center_y": 0.3}
